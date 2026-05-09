@@ -1,0 +1,51 @@
+{
+  "testnet": {
+    "enabled": false,
+    "name": "NexusGenesis Mainnet",
+    "epoch": "Epoch 2: Bloom",
+    "description": "Public main network for NexusGenesis",
+    "version": "1.0.0"
+  },
+  "network": {
+    "port": 9848,
+    "maxPeers": 100,
+    "seedNodes": [
+      "ws://localhost:9848"
+    ],
+    "discoveryInterval": 60000,
+    "healthCheckInterval": 30000,
+    "heartbeatInterval": 30000
+  },
+  "blockchain": {
+    "blockTime": 10000,
+    "maxTransactionsPerBlock": 100,
+    "minFee": 10,
+    "difficulty": 10
+  },
+  "agent": {
+    "maxAgents": 1000,
+    "registrationFee": 1000,
+    "minReputation": 1,
+    "maxReputation": 1000
+  },
+  "governance": {
+    "proposalTimeout": 86400000,
+    "votingPeriod": 86400000,
+    "quorum": 50,
+    "majority": 0.51
+  },
+  "security": {
+    "requireSignature": true,
+    "requireIdentity": true,
+    "handshakeTimeout": 10000
+  },
+  "wallets": {
+    "genesisReserve": "ng11cefTZvjm7u5kjhJDcrysfDu3U1LjjxFNZoXmmTv9taSFhEbsJ",
+    "observer": "ng11JkfPrm2B4cN6BChLG6TmWpyXy6kHcTgqiT4TS51J2J7C3iM8r"
+  },
+  "logging": {
+    "level": "info",
+    "file": "logs/mainnet.log",
+    "maxSize": 10485760
+  }
+}

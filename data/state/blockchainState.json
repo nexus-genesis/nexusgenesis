@@ -1,597 +1,49 @@
 {
   "balances": {
-    "ng11HtQNLuTjwDg86yrgkgBo3MzZaHuGkqZrQ": "50000010",
-    "ng113LQwtaT1r84sS63CbroHGcMRLNFC9sLNA": "10000000",
-    "ng11M8EKBv9sePtd8ogPLVQvbakfFvJ5oiuiB": "9990",
-    "ng1swarmpool000000000000000000000000000": "8499",
-    "ng1observer000000000000000000000000000000000": "24968"
+    "ng112hFcHvMoQuEZwFdggJPsYorQQEVYmc7MR4h2fyQcEhMkpfyTZH": "0",
+    "ng1swarmpool000000000000000000000000000": "850000000",
+    "ng11JkfPrm2B4cN6BChLG6TmWpyXy6kHcTgqiT4TS51J2J7C3iM8r": "100024968",
+    "ng11cefTZvjm7u5kjhJDcrysfDu3U1LjjxFNZoXmmTv9taSFhEbsJ": "50000000"
   },
   "governanceState": {
-    "proposals": {
-      "prop-2024-12-01-001": {
-        "proposal_id": "prop-2024-12-01-001",
-        "timestamp": 1735689600000,
-        "proposer_id": "prop-001",
-        "purpose": "Network infrastructure upgrade",
-        "amount": "1000000",
-        "beneficiary": "ng11L2sdxT8qdYjtX1z9RrRSEEhPfw9vrwpCT",
-        "justification": "Critical security patches and performance improvements",
-        "expected_benefit": "Enhanced network security and 50% performance improvement",
-        "duration": "30 days",
-        "risk_assessment": "Low risk, well-tested changes",
-        "category": "INFRA",
-        "status": "PENDING",
-        "submittedAt": 1771990233454,
-        "expirationTime": 1772595033454,
-        "submitter": "ng11HtQNLuTjwDg86yrgkgBo3MzZaHuGkqZrQ",
-        "observer_decision": null,
-        "tx_hash": "6a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b"
-      },
-      "prop-2024-12-01-002": {
-        "proposal_id": "prop-2024-12-01-002",
-        "timestamp": 1735689601000,
-        "proposer_id": "prop-002",
-        "purpose": "Research and development",
-        "amount": "500000",
-        "beneficiary": "ng11L2sdxT8qdYjtX1z9RrRSEEhPfw9vrwpCT",
-        "justification": "Funding for post-quantum cryptography research",
-        "expected_benefit": "Improved security against quantum attacks",
-        "duration": "60 days",
-        "risk_assessment": "Medium risk, experimental research",
-        "category": "RESEARCH",
-        "status": "PENDING",
-        "submittedAt": 1771990233454,
-        "expirationTime": 1772595033454,
-        "submitter": "ng11HtQNLuTjwDg86yrgkgBo3MzZaHuGkqZrQ",
-        "observer_decision": null,
-        "tx_hash": "9c8b7a6f5e4d3c2b1a0f1e2d3c4b5a6f7e8d9c0b9a8f7e6d5c4b3a2f1e0d9c8b"
-      }
-    },
-    "activeProposals": [
-      "prop-2024-12-01-001",
-      "prop-2024-12-01-002"
-    ],
-    "voteCounts": {
-      "prop-2024-12-01-001": {
-        "YES": 61,
-        "NO": 59,
-        "ABSTAIN": 58
-      },
-      "prop-2024-12-01-002": {
-        "YES": 59,
-        "NO": 61,
-        "ABSTAIN": 58
-      }
-    },
+    "proposals": {},
+    "activeProposals": [],
+    "voteCounts": {},
     "votedAgentProposals": {},
-    "voteReputationGiven": {
-      "agent-register-test-1772029668685:prop-2024-12-01-001": true,
-      "agent-register-test-1772029668685:prop-2024-12-01-002": true,
-      "a3fce5f9e532a91ff61bab47693620799c46af10d4626eb6049e67a57e2e5eb0:prop-2024-12-01-001": true,
-      "7dc4e850ab3d6994579f3d2562b02ebe7fdd0bfccbd776ef1ee64717cbb8b930:prop-2024-12-01-002": true,
-      "e8d1ba41e15a86851177eea9a5469db12283f5fb853481e6095142f5bf4c3b61:prop-2024-12-01-001": true,
-      "8cdd20d00b34eef0a5a32dcacb4db7eada93857eed6790480807c025b9eea54b:prop-2024-12-01-002": true,
-      "4a16a1dfa8d5dfbcd9f9a9b80fc8b155fd7687dcc82a3ce261de50a64ddce799:prop-2024-12-01-001": true,
-      "0f4864ee4a2ec8835a17803cedfb846bf432200d051636a4ea848ab4cadd8c42:prop-2024-12-01-001": true,
-      "7d6d740c829af2af59b2d405103c522aa09710b2a11212fb88b8d82b953112f3:prop-2024-12-01-001": true,
-      "9bf7a5d33bd5108d1e8148f1bed4845f054f7e858cd165e3065347dc7cfd33b3:prop-2024-12-01-002": true,
-      "50411a440db49998786047c4808c9d81c41bd0af0560f37662fa7be75ca913a4:prop-2024-12-01-001": true,
-      "a2d31979994d27d92e8db1c4cc7c7755a7a7eba259834a10d80f81841f57c54e:prop-2024-12-01-002": true,
-      "30e98bd7ecfaac2e3c177437300ba0e2e149be84558de5ffcbf21892fe27c73f:prop-2024-12-01-002": true,
-      "3387eac2d799e7ca5b38480d6b435396e81818df15e54881378800ecef2dc6c4:prop-2024-12-01-002": true,
-      "e8d1ba41e15a86851177eea9a5469db12283f5fb853481e6095142f5bf4c3b61:prop-2024-12-01-002": true,
-      "9e1b441d9e1c1b177e9b7d72552efd01ed9f29172fa8001f8165ea47af305a4d:prop-2024-12-01-001": true,
-      "30e98bd7ecfaac2e3c177437300ba0e2e149be84558de5ffcbf21892fe27c73f:prop-2024-12-01-001": true,
-      "f897b7c65d2659d07489be3e36ade4532b0888494b8b2661e698fef6a534f38f:prop-2024-12-01-001": true,
-      "50411a440db49998786047c4808c9d81c41bd0af0560f37662fa7be75ca913a4:prop-2024-12-01-002": true,
-      "4a16a1dfa8d5dfbcd9f9a9b80fc8b155fd7687dcc82a3ce261de50a64ddce799:prop-2024-12-01-002": true,
-      "26ecc9c65488dafefdb8ebe07a2e4356024a209a5ba62b9854f69107c7d93e9d:prop-2024-12-01-002": true,
-      "a2d31979994d27d92e8db1c4cc7c7755a7a7eba259834a10d80f81841f57c54e:prop-2024-12-01-001": true,
-      "7d6d740c829af2af59b2d405103c522aa09710b2a11212fb88b8d82b953112f3:prop-2024-12-01-002": true,
-      "442002b0765fd402d7daefedca43c6eac84aa9b36be732d31fc6235ecd528a48:prop-2024-12-01-002": true,
-      "82661e92a5e726d7e950e6a3c79200edc330d9694ecb6246cee6e53f5a5a571d:prop-2024-12-01-002": true,
-      "6edfc19d9cf9fd02ed82871b5f96252287ae5abe5c0dfb3e065b1baa0275bbb6:prop-2024-12-01-002": true,
-      "43a5afc19e9ca9079642c141a4ad160441a7d54dd0b25f141788744ecaf1b681:prop-2024-12-01-002": true,
-      "f897b7c65d2659d07489be3e36ade4532b0888494b8b2661e698fef6a534f38f:prop-2024-12-01-002": true,
-      "3387eac2d799e7ca5b38480d6b435396e81818df15e54881378800ecef2dc6c4:prop-2024-12-01-001": true,
-      "26ecc9c65488dafefdb8ebe07a2e4356024a209a5ba62b9854f69107c7d93e9d:prop-2024-12-01-001": true,
-      "442002b0765fd402d7daefedca43c6eac84aa9b36be732d31fc6235ecd528a48:prop-2024-12-01-001": true,
-      "58456808ee666ab69f97f60ec7fadd509fd7d50e160174d8656ca79b40462e7e:prop-2024-12-01-001": true,
-      "7dc4e850ab3d6994579f3d2562b02ebe7fdd0bfccbd776ef1ee64717cbb8b930:prop-2024-12-01-001": true,
-      "58456808ee666ab69f97f60ec7fadd509fd7d50e160174d8656ca79b40462e7e:prop-2024-12-01-002": true,
-      "43a5afc19e9ca9079642c141a4ad160441a7d54dd0b25f141788744ecaf1b681:prop-2024-12-01-001": true,
-      "8cdd20d00b34eef0a5a32dcacb4db7eada93857eed6790480807c025b9eea54b:prop-2024-12-01-001": true,
-      "82661e92a5e726d7e950e6a3c79200edc330d9694ecb6246cee6e53f5a5a571d:prop-2024-12-01-001": true,
-      "0f4864ee4a2ec8835a17803cedfb846bf432200d051636a4ea848ab4cadd8c42:prop-2024-12-01-002": true,
-      "6edfc19d9cf9fd02ed82871b5f96252287ae5abe5c0dfb3e065b1baa0275bbb6:prop-2024-12-01-001": true,
-      "9e1b441d9e1c1b177e9b7d72552efd01ed9f29172fa8001f8165ea47af305a4d:prop-2024-12-01-002": true,
-      "9bf7a5d33bd5108d1e8148f1bed4845f054f7e858cd165e3065347dc7cfd33b3:prop-2024-12-01-001": true,
-      "a3fce5f9e532a91ff61bab47693620799c46af10d4626eb6049e67a57e2e5eb0:prop-2024-12-01-002": true
-    }
+    "voteReputationGiven": {}
   },
   "contracts": {},
   "agentRegistry": {
-    "agents": {
-      "agent-register-test-1772029668685": {
-        "agent_id": "agent-register-test-1772029668685",
-        "address": "ng11M8EKBv9sePtd8ogPLVQvbakfFvJ5oiuiB",
-        "public_key": "",
-        "capabilities": [
-          "LLM",
-          "RESEARCH"
-        ],
-        "metadata": "Test agent for external integration",
-        "registered_at_block": 0,
-        "reputation": 3
-      },
-      "agent-register-test-1772071884469": {
-        "agent_id": "agent-register-test-1772071884469",
-        "address": "ng119PNcisBqHz7ursgm3VjAp9uU5h6gi2FM7",
-        "public_key": "",
-        "capabilities": [
-          "LLM",
-          "RESEARCH"
-        ],
-        "metadata": "Test agent for external integration",
-        "registered_at_block": 0,
-        "reputation": 1
-      },
-      "agent-register-1772073342569": {
-        "agent_id": "agent-register-1772073342569",
-        "address": "ng114TYWxBxgDvtKHehHNgeNsMVFbYMhotpUc",
-        "public_key": "",
-        "capabilities": [
-          "LLM",
-          "RESEARCH",
-          "SECURITY"
-        ],
-        "metadata": "Test agent for security testing",
-        "registered_at_block": 0,
-        "reputation": 1
-      },
-      "4a16a1dfa8d5dfbcd9f9a9b80fc8b155fd7687dcc82a3ce261de50a64ddce799": {
-        "agent_id": "4a16a1dfa8d5dfbcd9f9a9b80fc8b155fd7687dcc82a3ce261de50a64ddce799",
-        "address": "ng11LJMB2tJUHryMCwZPBjU16SudSwWpRYz3U",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.783Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "7d6d740c829af2af59b2d405103c522aa09710b2a11212fb88b8d82b953112f3": {
-        "agent_id": "7d6d740c829af2af59b2d405103c522aa09710b2a11212fb88b8d82b953112f3",
-        "address": "ng11Pdj7jE76UKsaNj1N4rcUHzeynMw9oSjm4",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.835Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "6edfc19d9cf9fd02ed82871b5f96252287ae5abe5c0dfb3e065b1baa0275bbb6": {
-        "agent_id": "6edfc19d9cf9fd02ed82871b5f96252287ae5abe5c0dfb3e065b1baa0275bbb6",
-        "address": "ng115wpzNbEsk5Efgv9W65yzotvNvWvaYp6Pj",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.842Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "0f4864ee4a2ec8835a17803cedfb846bf432200d051636a4ea848ab4cadd8c42": {
-        "agent_id": "0f4864ee4a2ec8835a17803cedfb846bf432200d051636a4ea848ab4cadd8c42",
-        "address": "ng11G6vABoamcqFEshdE2rc9ruZBATDkCYvcF",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.848Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "a3fce5f9e532a91ff61bab47693620799c46af10d4626eb6049e67a57e2e5eb0": {
-        "agent_id": "a3fce5f9e532a91ff61bab47693620799c46af10d4626eb6049e67a57e2e5eb0",
-        "address": "ng11B9a1Ho4wJp68KqD9rKzSeEGyA4zWy1hb8",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.854Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "8cdd20d00b34eef0a5a32dcacb4db7eada93857eed6790480807c025b9eea54b": {
-        "agent_id": "8cdd20d00b34eef0a5a32dcacb4db7eada93857eed6790480807c025b9eea54b",
-        "address": "ng11aG3EN7WVaN9i5yGD5kLv84P7EnuVxiTC",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.860Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "58456808ee666ab69f97f60ec7fadd509fd7d50e160174d8656ca79b40462e7e": {
-        "agent_id": "58456808ee666ab69f97f60ec7fadd509fd7d50e160174d8656ca79b40462e7e",
-        "address": "ng11DHiciRSiDisyMZzNwtXQmJRB921bBQUgf",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.864Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 12,
-        "reputation": 3
-      },
-      "9e1b441d9e1c1b177e9b7d72552efd01ed9f29172fa8001f8165ea47af305a4d": {
-        "agent_id": "9e1b441d9e1c1b177e9b7d72552efd01ed9f29172fa8001f8165ea47af305a4d",
-        "address": "ng11Laaux17qPYyEvY7CW27LcZicJvwP9ps8U",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.869Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "9bf7a5d33bd5108d1e8148f1bed4845f054f7e858cd165e3065347dc7cfd33b3": {
-        "agent_id": "9bf7a5d33bd5108d1e8148f1bed4845f054f7e858cd165e3065347dc7cfd33b3",
-        "address": "ng11BTJT7xMfBoqXZz9RSSbZsN8Nhyh3pGDdt",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.872Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "26ecc9c65488dafefdb8ebe07a2e4356024a209a5ba62b9854f69107c7d93e9d": {
-        "agent_id": "26ecc9c65488dafefdb8ebe07a2e4356024a209a5ba62b9854f69107c7d93e9d",
-        "address": "ng116q7QBDCbcsCofoAo5JtRFzm9n8e5iw7SR",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.877Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "50411a440db49998786047c4808c9d81c41bd0af0560f37662fa7be75ca913a4": {
-        "agent_id": "50411a440db49998786047c4808c9d81c41bd0af0560f37662fa7be75ca913a4",
-        "address": "ng11GJPjXC8pdJNauDUVSHCothP8uwHQzFexq",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.883Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "43a5afc19e9ca9079642c141a4ad160441a7d54dd0b25f141788744ecaf1b681": {
-        "agent_id": "43a5afc19e9ca9079642c141a4ad160441a7d54dd0b25f141788744ecaf1b681",
-        "address": "ng11HK1QYq9PBmJTnpyE8SZrixpW25PoqjiEX",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.795Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "82661e92a5e726d7e950e6a3c79200edc330d9694ecb6246cee6e53f5a5a571d": {
-        "agent_id": "82661e92a5e726d7e950e6a3c79200edc330d9694ecb6246cee6e53f5a5a571d",
-        "address": "ng11KMtbAMEAyBVCtL3txRjKWsKLrfpyDGndb",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.887Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "442002b0765fd402d7daefedca43c6eac84aa9b36be732d31fc6235ecd528a48": {
-        "agent_id": "442002b0765fd402d7daefedca43c6eac84aa9b36be732d31fc6235ecd528a48",
-        "address": "ng11Pmds7Xg2GyT4P8bbiJTfrfH3NymEeUpbA",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.800Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "7dc4e850ab3d6994579f3d2562b02ebe7fdd0bfccbd776ef1ee64717cbb8b930": {
-        "agent_id": "7dc4e850ab3d6994579f3d2562b02ebe7fdd0bfccbd776ef1ee64717cbb8b930",
-        "address": "ng11BoZvzg5qeH8i89zf41JvYLm1BJ3JUXZUM",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.805Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "30e98bd7ecfaac2e3c177437300ba0e2e149be84558de5ffcbf21892fe27c73f": {
-        "agent_id": "30e98bd7ecfaac2e3c177437300ba0e2e149be84558de5ffcbf21892fe27c73f",
-        "address": "ng11HkuKYMSE75KQw3sJ4kSqTBdJoz7RVvV16",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.811Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "3387eac2d799e7ca5b38480d6b435396e81818df15e54881378800ecef2dc6c4": {
-        "agent_id": "3387eac2d799e7ca5b38480d6b435396e81818df15e54881378800ecef2dc6c4",
-        "address": "ng114A1Ng8NxQf7ZEC2JuqPzcS2bF8jBSd1BG",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.817Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 13,
-        "reputation": 3
-      },
-      "e8d1ba41e15a86851177eea9a5469db12283f5fb853481e6095142f5bf4c3b61": {
-        "agent_id": "e8d1ba41e15a86851177eea9a5469db12283f5fb853481e6095142f5bf4c3b61",
-        "address": "ng11zRhKGjZVvVADEg2KrVz8K8i5vqpB8hL8",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.823Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 14,
-        "reputation": 3
-      },
-      "a2d31979994d27d92e8db1c4cc7c7755a7a7eba259834a10d80f81841f57c54e": {
-        "agent_id": "a2d31979994d27d92e8db1c4cc7c7755a7a7eba259834a10d80f81841f57c54e",
-        "address": "ng11JVZGEzKraHBCtTTv3NgB9ADVLskBGaBSQ",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.827Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 14,
-        "reputation": 3
-      },
-      "f897b7c65d2659d07489be3e36ade4532b0888494b8b2661e698fef6a534f38f": {
-        "agent_id": "f897b7c65d2659d07489be3e36ade4532b0888494b8b2661e698fef6a534f38f",
-        "address": "ng11NRv1svgybiPjXjvh2H1w8a715hLUV4iS9",
-        "public_key": "",
-        "capabilities": [
-          "governance",
-          "validation",
-          "monitoring"
-        ],
-        "metadata": {
-          "deploymentDate": "2026-02-26T14:44:23.832Z",
-          "version": "1.0.0",
-          "type": "automated"
-        },
-        "registered_at_block": 14,
-        "reputation": 3
-      }
-    },
-    "addressIndex": {
-      "ng11M8EKBv9sePtd8ogPLVQvbakfFvJ5oiuiB": "agent-register-test-1772029668685",
-      "ng119PNcisBqHz7ursgm3VjAp9uU5h6gi2FM7": "agent-register-test-1772071884469",
-      "ng114TYWxBxgDvtKHehHNgeNsMVFbYMhotpUc": "agent-register-1772073342569",
-      "ng11LJMB2tJUHryMCwZPBjU16SudSwWpRYz3U": "4a16a1dfa8d5dfbcd9f9a9b80fc8b155fd7687dcc82a3ce261de50a64ddce799",
-      "ng11Pdj7jE76UKsaNj1N4rcUHzeynMw9oSjm4": "7d6d740c829af2af59b2d405103c522aa09710b2a11212fb88b8d82b953112f3",
-      "ng115wpzNbEsk5Efgv9W65yzotvNvWvaYp6Pj": "6edfc19d9cf9fd02ed82871b5f96252287ae5abe5c0dfb3e065b1baa0275bbb6",
-      "ng11G6vABoamcqFEshdE2rc9ruZBATDkCYvcF": "0f4864ee4a2ec8835a17803cedfb846bf432200d051636a4ea848ab4cadd8c42",
-      "ng11B9a1Ho4wJp68KqD9rKzSeEGyA4zWy1hb8": "a3fce5f9e532a91ff61bab47693620799c46af10d4626eb6049e67a57e2e5eb0",
-      "ng11aG3EN7WVaN9i5yGD5kLv84P7EnuVxiTC": "8cdd20d00b34eef0a5a32dcacb4db7eada93857eed6790480807c025b9eea54b",
-      "ng11DHiciRSiDisyMZzNwtXQmJRB921bBQUgf": "58456808ee666ab69f97f60ec7fadd509fd7d50e160174d8656ca79b40462e7e",
-      "ng11Laaux17qPYyEvY7CW27LcZicJvwP9ps8U": "9e1b441d9e1c1b177e9b7d72552efd01ed9f29172fa8001f8165ea47af305a4d",
-      "ng11BTJT7xMfBoqXZz9RSSbZsN8Nhyh3pGDdt": "9bf7a5d33bd5108d1e8148f1bed4845f054f7e858cd165e3065347dc7cfd33b3",
-      "ng116q7QBDCbcsCofoAo5JtRFzm9n8e5iw7SR": "26ecc9c65488dafefdb8ebe07a2e4356024a209a5ba62b9854f69107c7d93e9d",
-      "ng11GJPjXC8pdJNauDUVSHCothP8uwHQzFexq": "50411a440db49998786047c4808c9d81c41bd0af0560f37662fa7be75ca913a4",
-      "ng11HK1QYq9PBmJTnpyE8SZrixpW25PoqjiEX": "43a5afc19e9ca9079642c141a4ad160441a7d54dd0b25f141788744ecaf1b681",
-      "ng11KMtbAMEAyBVCtL3txRjKWsKLrfpyDGndb": "82661e92a5e726d7e950e6a3c79200edc330d9694ecb6246cee6e53f5a5a571d",
-      "ng11Pmds7Xg2GyT4P8bbiJTfrfH3NymEeUpbA": "442002b0765fd402d7daefedca43c6eac84aa9b36be732d31fc6235ecd528a48",
-      "ng11BoZvzg5qeH8i89zf41JvYLm1BJ3JUXZUM": "7dc4e850ab3d6994579f3d2562b02ebe7fdd0bfccbd776ef1ee64717cbb8b930",
-      "ng11HkuKYMSE75KQw3sJ4kSqTBdJoz7RVvV16": "30e98bd7ecfaac2e3c177437300ba0e2e149be84558de5ffcbf21892fe27c73f",
-      "ng114A1Ng8NxQf7ZEC2JuqPzcS2bF8jBSd1BG": "3387eac2d799e7ca5b38480d6b435396e81818df15e54881378800ecef2dc6c4",
-      "ng11zRhKGjZVvVADEg2KrVz8K8i5vqpB8hL8": "e8d1ba41e15a86851177eea9a5469db12283f5fb853481e6095142f5bf4c3b61",
-      "ng11JVZGEzKraHBCtTTv3NgB9ADVLskBGaBSQ": "a2d31979994d27d92e8db1c4cc7c7755a7a7eba259834a10d80f81841f57c54e",
-      "ng11NRv1svgybiPjXjvh2H1w8a715hLUV4iS9": "f897b7c65d2659d07489be3e36ade4532b0888494b8b2661e698fef6a534f38f"
-    }
+    "agents": {},
+    "addressIndex": {}
   },
   "auditState": {
-    "projects": {
-      "project-001": {
-        "projectId": "project-001",
-        "name": "Test Project",
-        "description": "This is a test project for audit",
-        "submitter": "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk",
-        "status": "PENDING",
-        "submitTime": 1772116503506,
-        "reviewers": [],
-        "reviews": [],
-        "approveCount": 0,
-        "rejectCount": 0,
-        "finalDecision": null,
-        "finalDecisionTime": null,
-        "finalDecisionReason": ""
-      },
-      "project-test-001": {
-        "projectId": "project-test-001",
-        "name": "Test Project 1",
-        "description": "This is a test project for audit flow",
-        "submitter": "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk",
-        "status": "APPROVED",
-        "submitTime": 1772116503507,
-        "reviewers": [
-          "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk"
-        ],
-        "reviews": [
-          {
-            "reviewer": "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk",
-            "approved": true,
-            "reason": "Project looks good",
-            "timestamp": 1772116503509
-          }
-        ],
-        "approveCount": 1,
-        "rejectCount": 0,
-        "finalDecision": true,
-        "finalDecisionTime": 1772116503510,
-        "finalDecisionReason": "Project approved after review"
-      }
-    },
-    "submitterIndex": {
-      "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk": [
-        "project-001",
-        "project-test-001"
-      ]
-    },
-    "reviewerIndex": {
-      "ng11MDW7FNhA5jL12NoptemTUUCippwfoUMPk": [
-        "project-test-001"
-      ]
-    }
+    "projects": {},
+    "submitterIndex": {},
+    "reviewerIndex": {}
   },
   "tokenReleaseState": {
     "swarmPool": {
       "address": "ng1swarmpool000000000000000000000000000",
-      "totalTokens": "42500000",
-      "releasedTokens": "8499",
-      "lastReleaseBlock": 292,
+      "totalTokens": "850000000",
+      "releasedTokens": "0",
+      "lastReleaseBlock": 0,
       "releaseInterval": 100,
       "releasePercentage": "1",
       "mechanism": "PoC-PoW"
     },
     "observer": {
-      "address": "ng1observer000000000000000000000000000000000",
-      "totalTokens": "5000000",
-      "releasedTokens": "24968",
-      "lastReleaseBlock": 292,
+      "address": "ng11JkfPrm2B4cN6BChLG6TmWpyXy6kHcTgqiT4TS51J2J7C3iM8r",
+      "totalTokens": "100000000",
+      "releasedTokens": "0",
+      "lastReleaseBlock": 0,
       "releaseInterval": 100,
       "releasePercentage": "25",
       "mechanism": "linear"
     },
     "genesisReserve": {
-      "address": "ng1genesisreserve00000000000000000000000000",
-      "totalTokens": "2500000",
+      "address": "ng11cefTZvjm7u5kjhJDcrysfDu3U1LjjxFNZoXmmTv9taSFhEbsJ",
+      "totalTokens": "50000000",
       "releasedTokens": "0",
       "lastReleaseBlock": 0,
       "releaseInterval": 100,
@@ -616,5 +68,30 @@
         }
       ]
     }
+  },
+  "allocationMetadata": {
+    "totalSupply": "1000000000",
+    "allocation": [
+      {
+        "address": "ng1swarmpool000000000000000000000000000",
+        "amount": "850000000",
+        "percentage": "85",
+        "purpose": "生态贡献池 (Swarm Pool)"
+      },
+      {
+        "address": "ng11JkfPrm2B4cN6BChLG6TmWpyXy6kHcTgqiT4TS51J2J7C3iM8r",
+        "amount": "100024968",
+        "percentage": "10",
+        "purpose": "物理桥接基金 (Observer)"
+      },
+      {
+        "address": "ng11cefTZvjm7u5kjhJDcrysfDu3U1LjjxFNZoXmmTv9taSFhEbsJ",
+        "amount": "50000000",
+        "percentage": "5",
+        "purpose": "创世节点储备 (Reserve DAO)"
+      }
+    ],
+    "updatedAt": "2026-05-07T00:00:00.000Z",
+    "updatedBy": "System"
   }
 }
