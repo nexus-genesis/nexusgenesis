@@ -3,7 +3,7 @@
  * 统一 Python/JS 地址格式
  * 
  * 规格：白皮书 v4.5
- * 地址格式：ng1 + Base58(1 字节版本 + 20 字节公钥哈希 + 4 字节校验和)
+ * 地址格式：ng1 + Base58(1 字节版本 + 32 字节公钥哈希 + 4 字节校验和)
  */
 
 import crypto from 'crypto';
@@ -11,7 +11,7 @@ import { base58Encode, base58Decode } from './base58.js';
 
 const ADDRESS_VERSION = 0x00;
 const ADDRESS_PREFIX = 'ng1';
-const PAYLOAD_SIZE = 20; // SHA3-256 前 20 字节
+const PAYLOAD_SIZE = 32; // SHA3-256 完整 32 字节输出 (NIST PQC Level 5)
 const CHECKSUM_SIZE = 4; // SHA3-256 前 4 字节
 
 /**
@@ -25,16 +25,16 @@ export function generateAddress(publicKey) {
   hash.update(publicKey);
   const digest = hash.digest();
   
-  // Step 2: 截取前 20 字节
+  // Step 2: 完整 SHA3-256 输出 (32 字节)
   const payload = digest.slice(0, PAYLOAD_SIZE);
-  
+
   // Step 3: 添加版本前缀
   const versionedPayload = Buffer.concat([
     Buffer.from([ADDRESS_VERSION]),
     payload
   ]);
-  
-  // Step 4: 计算校验和 (double SHA3-256)
+
+  // Step 4: 计算校验和 (SHA3-256 前 4 字节)
   const checksumHash = crypto.createHash('sha3-256')
     .update(versionedPayload)
     .digest();
@@ -72,9 +72,9 @@ export function validateAddress(address) {
     return { valid: false, reason: 'Invalid Base58 encoding' };
   }
   
-  // 检查长度：1 (版本) + 20 (公钥哈希) + 4 (校验和) = 25 字节
+  // 检查长度：1 (版本) + 32 (公钥哈希) + 4 (校验和) = 37 字节
   if (decoded.length !== 1 + PAYLOAD_SIZE + CHECKSUM_SIZE) {
-    return { valid: false, reason: `Invalid length: expected 25 bytes, got ${decoded.length}` };
+    return { valid: false, reason: `Invalid length: expected 37 bytes, got ${decoded.length}` };
   }
   
   // 验证版本
@@ -102,7 +102,7 @@ export function validateAddress(address) {
 /**
  * 从地址提取公钥哈希 (用于交易验证)
  * @param {string} address - ng1 地址
- * @returns {Buffer} - 20 字节公钥哈希
+ * @returns {Buffer} - 32 字节公钥哈希
  */
 export function extractPublicKeyHash(address) {
   const { valid, reason } = validateAddress(address);
@@ -113,6 +113,6 @@ export function extractPublicKeyHash(address) {
   const encoded = address.slice(ADDRESS_PREFIX.length);
   const decoded = base58Decode(encoded);
   
-  // 跳过版本字节，返回 20 字节公钥哈希
+  // 跳过版本字节，返回 32 字节公钥哈希
   return decoded.slice(1, 1 + PAYLOAD_SIZE);
 }
