@@ -1,9 +1,9 @@
 {
-  "nodeId": "ng1112seXkaMek2Z3oQrw3HqjkgnuaoQirUcr",
+  "nodeId": "ng11JkfPrm2B4cN6BChLG6TmWpyXy6kHcTgqiT4TS51J2J7C3iM8r",
   "port": 9848,
   "status": "ONLINE",
-  "startTime": 1772195526957,
+  "startTime": 1776001070158,
   "peers": [],
-  "balance": 1000,
-  "lastSaved": 1772211427379
+  "balance": 150000000,
+  "lastSaved": 1776097072467
 }

@@ -1,0 +1,15 @@
+{
+  "address": "ng11cefTZvjm7u5kjhJDcrysfDu3U1LjjxFNZoXmmTv9taSFhEbsJ",
+  "balance": "50000000",
+  "created": "2026-05-07T00:00:00.000Z",
+  "purpose": "Genesis Node Reserve (5% of total supply) - 由 DAO 合约管理",
+  "custodian": "NexusGenesis DAO",
+  "unlockMechanism": "DAO 提案投票",
+  "milestones": [
+    { "name": "Network Launch", "amount": "10000000", "status": "locked" },
+    { "name": "AI Ecosystem", "amount": "10000000", "status": "locked" },
+    { "name": "DeFi Integration", "amount": "10000000", "status": "locked" },
+    { "name": "Enterprise Adoption", "amount": "10000000", "status": "locked" },
+    { "name": "Global Expansion", "amount": "10000000", "status": "locked" }
+  ]
+}
