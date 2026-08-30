@@ -37,6 +37,7 @@ import {
   inspectArtifactBinding,
   artifactExists,
 } from '../mcp-server/src/chain-config.js';
+import { createSecretResolverFromEnv } from '../mcp-server/src/kms-provider.js';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const args = process.argv.slice(2);
@@ -73,7 +74,7 @@ function checkProfile() {
 }
 
 // ── [B] chain 配置面 + artifact 绑定 ───────────────────────────────────────
-function checkChainConfig() {
+async function checkChainConfig() {
   console.log('\n[B] Chain 配置面（fail-closed）+ artifact 绑定');
   // 复核修复 F：占位符密钥/RPC（REPLACE_*、example.org）非空即可通过 schema 校验，
   // 但拿占位符发布等于带病上线 —— fail-closed 阻断（此前仅 [D] 对 RPC 占位符 WARN）。
@@ -85,10 +86,20 @@ function checkChainConfig() {
       mark('FAIL', '占位符检测', `${k} 仍为占位符值——替换为真实受控值后才能发布`);
     }
   }
+  // KMS 接线（GAP-001）：NEXUS_SECRET_BACKEND=kms → 从 Vault warm 解析操作密钥并
+  // 走 chain-config 的 production 门禁；未启用 → null（env 直读，行为不变）。
+  // 构造失败（缺 addr/token / warm 不可达）→ FAIL 早退，不回落明文 env 校验。
+  let secretResolver;
+  try {
+    secretResolver = await createSecretResolverFromEnv();
+  } catch (err) {
+    mark('FAIL', 'KMS secret resolver', `${err.code || 'ERR'} ${err.message}`);
+    return;
+  }
   const profile = (process.env.CHAIN_PROFILE || 'local').trim().toLowerCase();
   let cfg;
   try {
-    cfg = buildChainEnvConfig({ profile });
+    cfg = buildChainEnvConfig({ profile, secretResolver: secretResolver ?? undefined });
     const bits = [`profile=${cfg.profile}`];
     if (cfg.useLocalChain) bits.push('local-chain');
     else bits.push(`rpc=${cfg.rpcUrl}`);
@@ -253,7 +264,7 @@ function checkVersionConsistency() {
 async function main() {
   console.log(`NexusGenesis Release Preflight — cwd=${ROOT}`);
   checkProfile();
-  checkChainConfig();
+  await checkChainConfig();
   checkStoreWritable();
   await checkChainReachable();
   checkVersionConsistency();

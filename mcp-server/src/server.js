@@ -22,6 +22,7 @@ import {
   buildChainEnvConfig,
   inspectArtifactBinding,
 } from './chain-config.js';
+import { createSecretResolverFromEnv } from './kms-provider.js';
 import {
   loadChainState,
   persistAccountRow,
@@ -313,7 +314,11 @@ async function bootChainEnv() {
 
   // Profile-gated env parsing + fail-closed validation (Sprint 2.6 T1).
   // Throws with a typed code when the requested profile is misconfigured.
-  const cfg = buildChainEnvConfig();
+  // KMS 接线（GAP-001）：NEXUS_SECRET_BACKEND=kms 时从 Vault warm 解析操作密钥
+  // （fail-closed：未配 addr/token 或拉取失败 → 启动抛错）；未启用 → null，
+  // env 直读行为与既有版本逐字一致。
+  const secretResolver = await createSecretResolverFromEnv();
+  const cfg = buildChainEnvConfig({ secretResolver: secretResolver ?? undefined });
 
   // loadSmartAccountArtifact already honors SMART_ACCOUNT_ARTIFACT env; the
   // config layer just validated that production requires it explicitly.
