@@ -81,6 +81,8 @@ import {
   __resetChainHealthForTest,
   __resetSamplersForTest,
 } from './metrics.js';
+import { startAuditCollector } from './audit-collector.js';
+import { startAuditAnchorService } from './audit-anchor.js';
 import { loadDeploymentProfile, __resetProfileForTest } from './deployment-profile.js';
 import {
   registerHealthCheck,
@@ -2065,6 +2067,19 @@ export function createServer() {
   // 关闭 → 不监听端口，行为与 Sprint 5/6 基线保持一致。挂到 server 便于测试按需关闭。
   const metricsServer = startMetricsServer({ port: process.env.METRICS_HTTP_PORT, snapshot });
   if (metricsServer) server.metricsServer = metricsServer;
+
+  // Sprint 8 GAP-002 Ⅱ — 可选集中式审计收集端点（AUDIT_HTTP_PORT gate，默认关）。
+  // 复用 audit-log 的 hash-chain 做无篡改校验后再输出；关闭 → 不监听（基线不变）。
+  const auditCollector = startAuditCollector({});
+  if (auditCollector) server.auditCollector = auditCollector;
+
+  // Sprint 8 GAP-002 Ⅲ — 外部锚定上链（AUDIT_ANCHOR_INTERVAL_MS gate，默认关）：
+  // 周期把审计链尾 hash 锚到 AuditAnchor.sol（append-only），使整链重写/截断在
+  // 链上留证。本地链被篡改 → 拒锚（fail-closed）；ephemeral 本地链自动停用。
+  const auditAnchor = startAuditAnchorService({
+    resolveChainEnv: () => resolveChainEnv(),
+  });
+  if (auditAnchor) server.auditAnchor = auditAnchor;
 
   // Sprint 7 T3 — 健康检查注册 + /health 端点 + alerting 接线。
   // chain/artifact 由 bootChainEnv（懒缓存 promise）提供；未 boot 前检查器按
