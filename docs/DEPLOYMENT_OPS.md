@@ -67,6 +67,10 @@
 | `ALERT_RULES_ENABLE_DEFAULTS=1` | 启用内置默认告警规则 | 可选 | 关闭 |
 | `AUDIT_LOG_FILE` | 审计落盘（JSON lines） | 可选 | 仅 stderr + 内存 |
 | `AUDIT_LOG_MAX_BYTES` | 审计日志体积上限（超限滚动 `.1`） | 可选 | 无限制 |
+| `AUDIT_HTTP_PORT` | 开启集中式审计收集（loopback，§6.4） | 可选 | 未设 → 不监听 |
+| `AUDIT_ANCHOR_INTERVAL_MS` | 开启外部锚定上链周期（§6.5） | 可选 | 未设 → 不启动 |
+| `AUDIT_ANCHOR_CONTRACT` | 已部署 AuditAnchor 合约地址 | 锚定必填 | 未设（interval 已设 → 拒启） |
+| `AUDIT_ANCHOR_ARTIFACT` | AuditAnchor artifact JSON 路径 | 可选 | 缺省仓库 out/ 默认路径 |
 
 > 显式 env 优先级最高，profile 文件是**默认层**：`loadDeploymentProfile` 只注入当前未显式设置的键。
 
@@ -200,8 +204,61 @@ readiness 检查器（`mcp-server/src/health.js` + `server.js` 注册）：`chai
 > provider 时 `chain_*` gauge 不进告警面（local/进程内链部署不会被 `chain_rpc_down` 误报 critical）。
 > 告警开启才循环评估（`setInterval` `unref`，不阻塞进程退出）。
 >
-> 可选观测端口（`METRICS_HTTP_PORT` / `HEALTH_HTTP_PORT`）故障（如端口占用）→ 结构化错误事件
->（`metrics_http_error` / `health_http_error`，stderr）并降级为「观测缺席」—— 绝不拖垮 MCP 协议进程。
+> 可选观测端口（`METRICS_HTTP_PORT` / `HEALTH_HTTP_PORT` / `AUDIT_HTTP_PORT`）故障（如端口占用）→ 结构化
+> 错误事件（`metrics_http_error` / `health_http_error` / `audit_collector_http_error`，stderr）并降级为
+> 「观测缺席」—— 绝不拖垮 MCP 协议进程。
+
+### 6.4 集中式审计收集（`AUDIT_HTTP_PORT`，loopback，可选）· Sprint 8 GAP-002 Ⅱ
+
+`mcp-server/src/audit-collector.js`：复用 audit-log 的 **hash-chain**（`verifyAuditHashChain`），
+输出前做无篡改校验，让"收集到的审计数据"本身可独立复验。开启后
+`http://127.0.0.1:${AUDIT_HTTP_PORT}`：
+
+| 端点 | 语义 | 返回字段 |
+|------|------|----------|
+| `GET /` | 审计流摘要 | `exists / volumes / verified / tampered / chainOk / chainError / tailHash` |
+| `GET /tail` | 链尾锚定摘要（轻量轮询锚定） | `count / tailHash / chainOk / tampered` |
+| `GET /entries?afterHash=&limit=` | 审计行（跨卷合并、**游标增量**、分页） | `count / totalAfterCursor / hasMore / nextCursor / stale / entries[]`（每条含 `hash`/`prevHash` 可复验）|
+| — | 篡改检测 | `tampered=true` / `chainOk=false` 但不静默丢弃数据 |
+
+关闭 gate → 不监听端口，基线不变。审计行 hash-chain 固化见 §7。
+
+- **重启续链**：链尾跨进程持久（首次写盘前从文件尾惰性初始化）——重启续写不断链、不误报。
+- **轮转跨卷**：新卷以旧卷链尾锚定校验；多次轮转后旧卷为链中段（更旧卷已删，首行以
+  continuation 语义接受、卷内仍严格串联），当前卷始终严格锚定。
+- **增量收集（游标契约，本仓库只提供端点、收集方在外部）**：收集方持久化 `nextCursor`/
+  `tailHash` 作为游标 → `?afterHash=` 仅拉增量（`limit`+`hasMore` 续拉分页）；游标失配
+  （两次拉取间头部被截/整链重写）→ `stale=true` + 全量返回供重同步 —— **集中式架构下的
+  截断检测面**：单文件本地视角无法察觉的尾部删除/重写，由收集方持久化游标暴露并告警。
+  非法 `afterHash`/`limit` → 400（操作员错误要响亮）。
+- 边界（如实）：`stale` 检测依赖收集方持久化游标（外部）；攻击者重算整链且收集方从未拉过 →
+  仍无法防 —— **外部锚定上链已落地（§6.5）**，与游标互补；多进程并发
+  append 同一文件不支持（per-process）。
+
+### 6.5 外部锚定上链（`AUDIT_ANCHOR_INTERVAL_MS`，可选）· Sprint 8 GAP-002 Ⅲ
+
+审计链尾 hash 定期锚到链上 **append-only** 合约（`contracts/solidity/src/AuditAnchor.sol`），
+使"整链重写/截断"在链上留证（hash 链传递性 → 每锚承诺整个前缀）。
+
+**启用三步**：
+1. 编译：`contracts/solidity` 下 `forge build --use 0.8.24`（产物
+   `out/AuditAnchor.sol/AuditAnchor.json`；`AUDIT_ANCHOR_ARTIFACT` 可覆盖路径）。
+2. 部署（广播者即链上 anchoringKey，**用 relayer 运营密钥**广播）：
+   `forge script script/DeployAuditAnchor.s.sol:DeployAuditAnchor --rpc-url <rpc> --broadcast --private-key <relayer_pk>`
+3. mcp-server env：`AUDIT_ANCHOR_CONTRACT=<地址>` + `AUDIT_ANCHOR_INTERVAL_MS=<毫秒>`
+   （如 60000；未设 → 服务不启动，基线不变）。
+
+**行为**：周期 tick 重放本地审计链 → 链尾/计数有变化才广播
+`anchor(tailHash, entryCount)`（无新条目不发 tx；重启先 `latest()` 对齐不重锚）；
+本地链被篡改 → **拒锚**并结构化告警（fail-closed）；`CHAIN_ALLOW_LOCAL` 进程内
+ephemeral 链 → 自动停用（锚随进程消失无意义）；单轮广播失败下轮重试。锚定成功
+只写 stderr 结构化事件 + 链上 `Anchored` 事件（不写审计链，避免无限自举）。
+
+**验证（运维/收集方职责）**：`mcp-server/src/audit-anchor.js` 导出
+`replayAuditTrail(file)`（跨卷重放 running hash）+ `readOnChainAnchors({contract})` +
+`verifyAuditAgainstAnchors({trail, anchors})`——位置绑定校验：第 `entryCount` 行
+running hash 必须等于锚 `tailHash`；`entryCount` 回退或链上索引跳变 = 重写后重锚
+告警。间隔窗口内的尾部截断由下一次锚定或收集方游标（§6.4 `stale`）暴露。
 
 ---
 
@@ -210,6 +267,10 @@ readiness 检查器（`mcp-server/src/health.js` + `server.js` 注册）：`chai
 - 结构日志：`logStructured` 写 **stderr JSON line**（stdout 保留给 MCP 协议）。
 - 审计：`recordAudit` 双写 stderr + `AUDIT_LOG_FILE`（JSON lines，原子追加）；`AUDIT_LOG_MAX_BYTES` 超限 →
   重命名 `.1` 滚动（保留上一卷）。
+- **审计 hash-chain（Sprint 8）**：每条审计记录注入 `prevHash`（=上一哈希链尾）与 `hash`
+  （**整条记录** canonical 序列化 sha256，任何字段含告警明细被改即失配）；链尾跨重启续链；
+  `verifyAuditHashChain(file, { anchorHash })` 逐行无篡改检测（anchor 支持轮转跨卷）。集中式收集
+  见 §6.4。`AUDIT_LOG_FILE` 为 per-process 文件（多进程并发 append 不支持）。
 - 审计字段机器可读契约：`tool/accountId/sessionId/payloadDigest/txHash/errorName/broadcaster/timestamp`。
 
 ---
