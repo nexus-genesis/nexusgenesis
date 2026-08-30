@@ -19,6 +19,7 @@
  *     artifact 必须存在并绑定 solc 版本。
  */
 import { existsSync } from 'node:fs';
+import { isSecretRef } from './secret-store.js';
 
 // 众所周知、不可用于非 local 配置面的 anvil 测试私钥（derived address 见 README）。
 const KNOWN_ANVIL_KEYS = new Set([
@@ -113,6 +114,32 @@ export function buildChainEnvConfig({ profile, secretResolver } = {}) {
   };
 
   if (!isLocal) {
+    // GAP-001 严格化：production + KMS 后端时，操作密钥一律禁止走 env 明文——必须用
+    // secret ref，且 ref 必须能被该 resolver 真实解析（否则以 PRODUCTION_SECRET_UNRESOLVED
+    // 精确拒绝，绝不静默回退 anvil 默认键）。置于最前，使两类失败以明确 code 被拒。
+    if (resolved === 'production' && secretResolver && secretResolver.backend === 'kms') {
+      for (const name of ['CHAIN_OWNER_PK', 'CHAIN_EMERGENCY_PK', 'CHAIN_RELAYER_PK']) {
+        const rawEnv = process.env[name];
+        if (rawEnv == null) continue;
+        if (!isSecretRef(rawEnv)) {
+          fail(
+            'PRODUCTION_PLAINTEXT_KEY_REJECTED',
+            `CHAIN_PROFILE=production with a KMS secretResolver forbids sourcing ${name} from ` +
+            `plaintext env (GAP-001). Provide a secret ref the resolver can resolve, e.g. ` +
+            `vault:owners/agent-owner#${name}.`,
+          );
+        }
+        // ref 形态合法但解析不出（scheme 不被该 resolver 支持 / 字段写错 / 未 warm）→
+        // 精确拒绝。绝不静默回退 anvil 默认键再报误导性的 CHAIN_ANVIL_KEY_REJECTED。
+        if (secretResolver.resolveSecretRef(String(rawEnv)) == null) {
+          fail(
+            'PRODUCTION_SECRET_UNRESOLVED',
+            `${name}=${rawEnv} is a secret ref the ${secretResolver.backend} resolver cannot ` +
+            'resolve (unsupported scheme / unknown field / not warmed at startup). Fix the ref or the KMS layout.',
+          );
+        }
+      }
+    }
     // 非 local 配置面必须显式外部 RPC —— LocalChain 仅 local 允许。
     if (!rpcUrl) {
       fail(
