@@ -50,7 +50,9 @@ test('hash and randomBytes are non-trivial', () => {
 });
 
 test('getPQCInfo reports FIPS 204', () => {
-  assert.equal(getPQCInfo().algorithm, 'Dilithium2');
+  assert.equal(getPQCInfo().algorithm, 'ML-DSA-44');
+  // The round-3 name stays available for consumers that matched on it.
+  assert.equal(getPQCInfo().legacyName, 'Dilithium2');
   assert.equal(getPQCInfo().nistStandard, 'FIPS 204');
 });
 

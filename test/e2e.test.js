@@ -113,7 +113,9 @@ describe('NexusGenesis E2E 全链路集成测试', () => {
       assert.ok(leader, '应选举出领袖');
 
       const genesisBlock = createGenesisBlock();
-      const blockResult = localConsensus.proposeBlock(genesisBlock, leader);
+      // electLeader() returns the leader RECORD; proposeBlock() looks the
+      // proposer up in this.leaders, which is keyed by nodeId.
+      const blockResult = localConsensus.proposeBlock(genesisBlock, leader.nodeId);
       if (blockResult) {
         localConsensus.confirmBlock(genesisBlock.hash, 'gamma');
         const status = localConsensus.getBlockStatus(genesisBlock.hash);

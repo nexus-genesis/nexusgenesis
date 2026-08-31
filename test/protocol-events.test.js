@@ -8,7 +8,7 @@
  * - Payload 字段验证
  */
 
-import { describe, it, before } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
 import { GenesisNode } from '../src/node/genesisNode.js';
 import { EventParser, EventValidator } from '../src/protocol/events.js';
@@ -69,6 +69,14 @@ describe('协议事件交易解析', () => {
     // 注册测试 Observer 地址
     const observerAddress = OBSERVER_EVENT_EXAMPLE.from;
     genesisNode.registerObserver(observerAddress, 'admin');
+  });
+
+  // A GenesisNode starts long-lived intervals (status display, mempool cleanup,
+  // periodic sync, state saving). Without this, every assertion in the file
+  // passed and then the process sat there holding a live event loop until
+  // something killed it, which is most of what made `node --test test/` slow.
+  after(async () => {
+    if (genesisNode?.shutdown) await genesisNode.shutdown();
   });
   
   describe('OBSERVER_EVENT 交易', () => {

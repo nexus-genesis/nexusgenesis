@@ -113,7 +113,16 @@ export function generateMasterKey() {
  * @returns {boolean}
  */
 export function verifyOpKeyFingerprint(privateKey, expectedFingerprint) {
-  return calculateKeyFingerprint(privateKey) === expectedFingerprint;
+  // Constant-time, like the HMAC check in custody.js. A fingerprint is derived
+  // from the private key, so leaking it a character at a time through the early
+  // exit of `===` gives away something about key material that this function
+  // exists to protect. The cost is a Buffer allocation on a call that already
+  // hashes 2,560 bytes.
+  if (typeof expectedFingerprint !== 'string') return false;
+  const actual = Buffer.from(calculateKeyFingerprint(privateKey), 'utf8');
+  const expected = Buffer.from(expectedFingerprint, 'utf8');
+  if (actual.length !== expected.length) return false;
+  return crypto.timingSafeEqual(actual, expected);
 }
 
 /**

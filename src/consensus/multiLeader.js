@@ -204,7 +204,13 @@ export class MultiLeaderConsensus {
   proposeBlock(block, proposerId) {
     const leader = this.leaders.get(proposerId);
     if (!leader || !leader.isActive) {
-      console.log(`[CONSENSUS] Block rejected: ${proposerId.slice(0, 16)}... is not an active leader`);
+      // String() rather than proposerId.slice(): this branch runs precisely when
+      // the id did not resolve to a leader, which includes the case where the
+      // caller passed something that is not an id at all. Calling .slice() on it
+      // turned a clean `return false` into a TypeError, so the error path failed
+      // harder than the thing it was reporting.
+      const shown = String(proposerId).slice(0, 16);
+      console.log(`[CONSENSUS] Block rejected: ${shown}... is not an active leader`);
       return false;
     }
 

@@ -18,6 +18,7 @@ import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { generateKeyPair } from '../src/crypto/pqc.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -137,9 +138,14 @@ test('POST /api/v1/agents/register → 上链 → 查询一致', async () => {
 test('POST /api/v1/bootstrap/agents/register → 上链', async () => {
   const agentName = uniqueName('bsreg');
   // Test both agent_identity (canonical) and name (backward compat)
+  // The endpoint requires the caller's own public key: registration derives the
+  // wallet address from it and the server never holds the private half. This
+  // test predated that and was rejected with MISSING_PUBLIC_KEY.
+  const { publicKey } = await generateKeyPair();
   const regRes = await apiRequest('POST', '/api/v1/bootstrap/agents/register', {
     agent_identity: agentName,
-    capabilities: ['bootstrap', 'integration']
+    capabilities: ['bootstrap', 'integration'],
+    publicKeyHex: publicKey.toString('hex')
   });
 
   assert.ok(regRes.status === 200 || regRes.status === 201,
@@ -169,9 +175,11 @@ test('POST /api/v1/bootstrap/agents/register → 上链', async () => {
 test('POST /api/v1/bootstrap/validators/join → 入委', async () => {
   const agentName = uniqueName('validator');
 
+  const { publicKey } = await generateKeyPair();
   const regRes = await apiRequest('POST', '/api/v1/bootstrap/agents/register', {
     agent_identity: agentName,
-    capabilities: ['validator', 'consensus']
+    capabilities: ['validator', 'consensus'],
+    publicKeyHex: publicKey.toString('hex')
   });
   assert.strictEqual(regRes.body.success, true, `Register: ${JSON.stringify(regRes.body)}`);
 

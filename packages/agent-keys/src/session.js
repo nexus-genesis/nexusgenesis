@@ -39,18 +39,22 @@
  *     ttl: 7 * 24 * 60 * 60 * 1000  // 7 days
  *   });
  *
- *   // Verifier checks before each operation
- *   const result = checkSessionAccess(session, {
+ *   // Verifier checks before each operation. verifySessionAccess() checks the
+ *   // issuer's signature BEFORE evaluating scope, so a fabricated session
+ *   // object cannot reach the scope checks at all.
+ *   const result = await verifySessionAccess(session, issuerPublicKey, {
  *     contract: '0x1f9840...',
  *     method: 'swap',
  *     chain: 'ethereum',
  *     amount: '50'
  *   });
  *   // ^^ if (result.allowed) { then proceed }
- *   // NOTE: checkSessionAccess does NOT verify the session's signature.
- *   // Always run verifySessionSignature(session, issuerPublicKey) first —
- *   // an unsigned/forged session object would otherwise pass the scope
- *   // checks below.
+ *   //
+ *   // checkSessionAccess() is the scope check on its own, with no signature
+ *   // verification. It answers "would this scope permit the operation", which
+ *   // is not the same as "may this caller do it": a forged session with an
+ *   // empty (unrestricted) scope returns allowed: true. Only use it when the
+ *   // signature has already been established by other means.
  *
  * SECURITY NOTES
  * --------------
@@ -273,14 +277,18 @@ export function narrowSession(parentSession, narrower, issuerKey) {
  * @returns {{ allowed: boolean, reason?: string }}
  */
 export function checkSessionAccess(session, context = {}) {
+  // NOTE: every return below carries `signatureVerified: false`. This function
+  // never checks a signature, and a caller that logs or forwards its result
+  // should be able to see that from the result itself rather than from the
+  // documentation. Use verifySessionAccess() to make an authorization decision.
   // -- Structural validation -------------------------------------------------
   if (!session || session.type !== 'session_key') {
-    return { allowed: false, reason: 'Not a session key' };
+    return { allowed: false, reason: 'Not a session key', signatureVerified: false };
   }
 
   // -- Expiry check ---------------------------------------------------------
   if (session.expiresAt && Date.now() > session.expiresAt) {
-    return { allowed: false, reason: 'Session key expired' };
+    return { allowed: false, reason: 'Session key expired', signatureVerified: false };
   }
 
   // -- Contract whitelist ---------------------------------------------------
@@ -322,11 +330,11 @@ export function checkSessionAccess(session, context = {}) {
     // malformed "0" sneak past limit checks as a legitimate zero-value call.
     const amountRaw = typeof context.amount === 'string' ? context.amount.trim() : context.amount;
     if (amountRaw === '' ) {
-      return { allowed: false, reason: 'invalid amount: empty string' };
+      return { allowed: false, reason: 'invalid amount: empty string', signatureVerified: false };
     }
     const spentRaw = typeof context.spentToday === 'string' ? context.spentToday.trim() : context.spentToday;
     if (spentRaw === '') {
-      return { allowed: false, reason: 'invalid spentToday: empty string' };
+      return { allowed: false, reason: 'invalid spentToday: empty string', signatureVerified: false };
     }
     let amount, spentToday = 0n;
     try {
@@ -335,13 +343,13 @@ export function checkSessionAccess(session, context = {}) {
         spentToday = BigInt(spentRaw);
       }
     } catch {
-      return { allowed: false, reason: 'invalid amount or spentToday: not an integer' };
+      return { allowed: false, reason: 'invalid amount or spentToday: not an integer', signatureVerified: false };
     }
     if (amount < 0n) {
-      return { allowed: false, reason: 'Amount must not be negative' };
+      return { allowed: false, reason: 'Amount must not be negative', signatureVerified: false };
     }
     if (spentToday < 0n) {
-      return { allowed: false, reason: 'spentToday must not be negative' };
+      return { allowed: false, reason: 'spentToday must not be negative', signatureVerified: false };
     }
 
     const maxPerTx = BigInt(session.maxPerTx || '0');
@@ -357,7 +365,7 @@ export function checkSessionAccess(session, context = {}) {
     }
   }
 
-  return { allowed: true };
+  return { allowed: true, signatureVerified: false };
 }
 
 // --- Signature Verification --------------------------------------------------
@@ -393,6 +401,33 @@ export async function verifySessionSignature(session, issuerPublicKey) {
   return verify(payload, signature, issuerPublicKey);
 }
 
+/**
+ * Authorize an operation against a session key: verify the issuer's signature
+ * FIRST, then evaluate scope. This is the function a verifier should call.
+ *
+ * `checkSessionAccess` deliberately performs no signature check, so on its own
+ * it answers "would this scope permit the operation", not "may this caller do
+ * it". Those are different questions, and a fabricated session object with an
+ * empty (therefore unrestricted) scope answers the first one with `allowed:
+ * true`. Anything making a security decision needs the second question, which
+ * is what this function asks.
+ *
+ * @param {object} session - The session key token
+ * @param {Buffer} issuerPublicKey - The issuer's ML-DSA-44 public key
+ * @param {object} context - Same shape as {@link checkSessionAccess}
+ * @returns {Promise<{ allowed: boolean, reason?: string, signatureVerified: boolean }>}
+ */
+export async function verifySessionAccess(session, issuerPublicKey, context = {}) {
+  if (!issuerPublicKey) {
+    return { allowed: false, reason: 'issuerPublicKey is required', signatureVerified: false };
+  }
+  const signatureVerified = await verifySessionSignature(session, issuerPublicKey);
+  if (!signatureVerified) {
+    return { allowed: false, reason: 'invalid session signature', signatureVerified: false };
+  }
+  return { ...checkSessionAccess(session, context), signatureVerified: true };
+}
+
 // --- Utility -----------------------------------------------------------------
 
 /**
@@ -419,6 +454,7 @@ export function isSessionExpired(session) {
 export default {
   createSessionKey,
   checkSessionAccess,
+  verifySessionAccess,
   verifySessionSignature,
   getSessionTTL,
   isSessionExpired

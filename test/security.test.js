@@ -165,9 +165,16 @@ describe('钱包加密存储', () => {
     const encrypted = wallet.exportEncrypted(password);
     
     assert.ok(encrypted.ciphertext);
-    assert.ok(encrypted.salt);
+    // The envelope nests KDF parameters: encryptPrivateKey() returns
+    // { kdf: { algorithm, iterations, salt, keyLength }, iv, ciphertext, ... }.
+    // This asserted a flat `salt`, which the envelope has never had, so the
+    // test failed against a module that was behaving correctly.
+    assert.ok(encrypted.kdf);
+    assert.ok(encrypted.kdf.salt);
     assert.ok(encrypted.iv);
-    assert.strictEqual(encrypted.address, wallet.address);
+    // The caller's extra fields are namespaced under `metadata`, alongside
+    // createdAt and keyLength, rather than merged into the envelope root.
+    assert.strictEqual(encrypted.metadata.address, wallet.address);
   });
   
   it('应能从加密数据导入钱包', async () => {
