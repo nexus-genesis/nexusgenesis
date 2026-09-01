@@ -5,7 +5,8 @@
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "nexusgenesis-agent-mcp": "src/index.js"
+    "nexusgenesis-agent-mcp": "src/index.js",
+    "nexusgenesis-keeper": "src/keeper-main.js"
   },
   "scripts": {
     "start": "node src/index.js",
