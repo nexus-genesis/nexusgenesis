@@ -303,10 +303,12 @@ function withTimeout(promise, ms) {
  *
  * @param {object} opts
  * @param {string|number} [opts.port]   默认 process.env.REMOTE_SIGNER_KEEPER_PORT
+ * @param {string} [opts.bind]          绑定地址，默认 127.0.0.1（跨主机部署需显式
+ *                                      指定并前置 TLS/隧道；协议 HMAC 防篡改但不加密）
  * @param {function} [opts.handle]      默认走 handleCustodySignRequest；可注入（测试）
  * @returns {import('node:http').Server|null}
  */
-export function startRemoteSignerKeeper({ port, handle } = {}) {
+export function startRemoteSignerKeeper({ port, bind, handle } = {}) {
   const raw = (port ?? process.env.REMOTE_SIGNER_KEEPER_PORT ?? '').trim();
   if (!raw) return null; // gate 关
   const p = Number(raw);
@@ -371,6 +373,6 @@ export function startRemoteSignerKeeper({ port, handle } = {}) {
     logStructured('remote_signer_keeper_error', { error: `listen failed on ${p}: ${err?.message ?? err}`, code: err?.code ?? 'E_LISTEN' });
     server.close();
   });
-  server.listen(p, '127.0.0.1');
+  server.listen(p, bind || '127.0.0.1');
   return server;
 }

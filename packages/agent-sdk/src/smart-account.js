@@ -22,11 +22,16 @@
  *
  * SECURITY
  * ────────
- * The facade adds no logic of its own — it forwards to
+ * The facade adds exactly one gate of its own: the remote-signer env switch
+ * in signSmartAccountIntent (REMOTE_SIGNER_URL → human-side Keeper, cloud
+ * AGENTs never hold root keys). Everything else forwards to
  * createSmartAccountClient / signSmartAccountIntent / verifySmartAccountIntent
  * in chain-eth. All fail-closed + INV invariants are enforced in the
  * forwarded implementations; nothing here can weaken them.
  */
+import { canonicalizeAssetIntent } from './keys.js';
+import { createKeeperSignerFromEnv } from './remote-signer-client.js';
+
 let _modulePromise = null;
 
 /**
@@ -89,9 +94,31 @@ export async function createSmartAccountClient(opts) {
 
 /**
  * Official EVM signing path: canonicalize + hash + secp256k1-sign.
+ *
+ * ENV GATE (Sprint 8 Key Custody): when `REMOTE_SIGNER_URL` is set, the
+ * signature is requested from the human-side Keeper instead — cloud AGENTs
+ * never hold root private keys. Fail-closed rules in remote mode:
+ *   - `privateKeyHex` in opts → rejected (KEEPER_LOCAL_KEY_FORBIDDEN)
+ *   - `REMOTE_SIGNER_SHARED_SECRET` missing → rejected (KEEPER_NOT_CONFIGURED)
+ * The Keeper wire protocol does not return the canonical payload, so it is
+ * rebuilt locally from (session, intent) — a pure, deterministic function of
+ * inputs the Keeper has already policy-checked byte-for-byte against its
+ * authoritative session.
  * @see nexusgenesis-chain-eth signSmartAccountIntent
  */
 export async function signSmartAccountIntent(opts) {
+  const remote = createKeeperSignerFromEnv();
+  if (remote) {
+    if (opts && opts.privateKeyHex !== undefined) {
+      const err = new Error('remote signer mode (REMOTE_SIGNER_URL) forbids privateKeyHex — cloud AGENTs must not hold root private keys [KEEPER_LOCAL_KEY_FORBIDDEN]');
+      err.code = 'KEEPER_LOCAL_KEY_FORBIDDEN';
+      throw err;
+    }
+    const { session, intent } = opts ?? {};
+    const signed = await remote.signSmartAccountIntent({ session, intent });
+    const payload = canonicalizeAssetIntent(session, intent);
+    return { payload, digest: signed.digest, signature: signed.signature };
+  }
   const mod = await loadChainEth();
   return mod.signSmartAccountIntent(opts);
 }

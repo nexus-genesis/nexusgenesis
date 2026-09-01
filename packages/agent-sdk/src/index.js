@@ -18,6 +18,12 @@ export * as messageSecurity from './message-security.js';
 export * as serviceIdentity from './service-identity.js';
 export * as transportSecurity from './transport-security.js';
 export * as storeInterface from './store-interface.js';
+export * as remoteSigner from './remote-signer-client.js';
+
+export {
+  createKeeperSigner,
+  createKeeperSignerFromEnv,
+} from './remote-signer-client.js';
 
 export {
   createMessageEnvelope,
