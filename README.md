@@ -94,13 +94,12 @@ These are the packages aligned with npm publishing, CI, and the GitHub landing p
 - [`packages/chain-adapters`](packages/chain-adapters)
 - [`mcp-server`](mcp-server)
 
-### 2. Historical retained code
+### 2. Archived legacy code
 
-These paths remain in the repo for compatibility and reference, but they are **not**
-the primary published security-standard layer:
-
-- [`sdk`](sdk) — legacy testnet/bootstrap SDK line
-- [`sdk/agent-framework`](sdk/agent-framework) — older framework packaging line
+The original L1 chain and its companion files have been cut and moved to
+[`archive/L1/`](archive/L1/) (see ARCHIVED-L1.md). They are retained **only** for
+historical reference and are **not** part of the security-standard layer, CI, or npm
+publishing. No new development targets `archive/`.
 
 ### 3. Internal experimental packages
 
@@ -218,7 +217,10 @@ The security standard layer is **stable and published**. The released package se
 `nexusgenesis-agent-mcp`. These packages ship independently, are test-covered,
 and are the packages targeted by CI and npm publish.
 
-The original NexusGenesis **independent L1 testnet** continues to exist at [nexus-genesis.top](https://nexus-genesis.top) but is now treated as a **developer devnet / demonstration environment** — it is not the focus of ongoing development. NGEN carries no economic value and there is no fundraising.
+The original NexusGenesis **independent L1 testnet** has been **archived** (see
+`archive/L1/`). It operated as a single-node devnet and carried no economic value.
+Ongoing development and all published packages focus exclusively on the agent
+key-custody / authorization layer above.
 
 ---
 

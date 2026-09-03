@@ -79,7 +79,7 @@ jobs:
 
       - name: Check syntax
         run: |
-          for file in $(find src -name "*.js" -not -path "*/node_modules/*"); do
+          for file in $(find packages mcp-server scripts docs/examples -name "*.js" -not -path "*/node_modules/*"); do
             node -c "$file" || exit 1
           done
 
