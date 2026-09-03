@@ -6,7 +6,7 @@
 
 ## Project Overview
 - **Type**: Agent key security + coordination standard layer (not a blockchain)
-- **Status**: Stable, published on npm, test-covered, security-audited (2026-08-07)
+- **Status**: Stable, published on npm, test-covered; underlying crypto (@noble/post-quantum) is audited — upper-layer composition (envelope KDF, takeover, limits, sessions) is under Phase 2 audit (see docs/audit/PHASE2-AUDIT-SCOPE-SPEC.md), not yet production-attested
 - **Repository**: https://github.com/nexus-genesis/nexusgenesis
 - **License**: MIT
 
