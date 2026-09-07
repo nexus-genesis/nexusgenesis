@@ -28,6 +28,11 @@ See the repository `README.md`.
 
 ## Shutdown / Restart Protocol (2026-09-07)
 
+> **Status: PENDING.** The server stays up for now — the shutdown checklist
+> below (including the stop-writes data snapshot) executes **only when the
+> actual shutdown is triggered**. Steps are finalized and grounded in a live
+> probe; nothing has been executed yet.
+
 The live devnet infrastructure (nexus-genesis.top server, website, three
 pm2 processes) is being **shut down** as the project goes all-in on aegis-vault.
 Reversibility was audited before shutdown: restart is technically unobstructed
