@@ -58,6 +58,54 @@ Reversibility was audited before shutdown: restart is technically unobstructed
 5. Domain: keep nexus-genesis.top registered (low annual cost; reusable for a
    future site). DNS may be pointed at a placeholder or left parked.
 
+#### Data snapshot — exact procedure (server probed 2026-09-07)
+
+Ground truth probed over SSH (`root@nexus-genesis.top`, key `%USERPROFILE%\.ssh\ng_deploy`):
+`/opt/nexusgenesis/data` is **9.3 GB**; free disk 13 GB (server-local tar fits);
+11 pm2 processes (genesis / monitor / node02 / node03 / 5×agent-worker-swarm /
+system-publisher / ng-keeper-staging[already stopped]).
+
+> Order matters: **stop writes first, then snapshot** — the chain DB is not
+> crash-consistent under a running process, and shutdown is the end goal
+> anyway. Do not attempt an online (running-process) snapshot.
+
+```bash
+# ── on the SERVER (via ssh -i ~/.ssh/ng_deploy root@nexus-genesis.top) ──
+# Step S1: stop every writer (shutdown is the end state; stop all)
+pm2 stop all && pm2 status
+
+# Step S2: server-side tar + checksum (leave ON SERVER until verified locally)
+cd /opt/nexusgenesis && tar czf /tmp/nexusgenesis-data-$(date +%F).tgz data
+sha256sum /tmp/nexusgenesis-data-*.tgz | tee /tmp/nexusgenesis-data.sha256
+
+# Step S3: pm2 dump + env capture
+pm2 dump && cp ~/.pm2/dump.pm2 /tmp/
+cp /opt/nexusgenesis/.env /tmp/ 2>/dev/null || echo "no .env file"
+
+# ── on the LOCAL machine (PowerShell; scp is binary-safe, avoid piping
+#    tar through PowerShell — PS 5.1 mangles binary streams) ─────────────
+# Step L1: download archive + sidecar files
+scp -i $env:USERPROFILE\.ssh\ng_deploy root@nexus-genesis.top:/tmp/nexusgenesis-data-*.tgz D:\backups\
+scp -i $env:USERPROFILE\.ssh\ng_deploy root@nexus-genesis.top:/tmp/nexusgenesis-data.sha256 D:\backups\
+scp -i $env:USERPROFILE\.ssh\ng_deploy root@nexus-genesis.top:/tmp/dump.pm2 D:\backups\
+
+# Step L2: verify checksum matches the server-side value
+Get-FileHash D:\backups\nexusgenesis-data-*.tgz -Algorithm SHA256
+
+# Step L3: verify archive integrity (list contents; spot-check counts)
+tar -tzf D:\backups\nexusgenesis-data-*.tgz | Measure-Object -Line
+
+# Step L4: only after L2+L3 pass — clean up server temp files
+ssh -i $env:USERPROFILE\.ssh\ng_deploy root@nexus-genesis.top "rm /tmp/nexusgenesis-data-*.tgz /tmp/nexusgenesis-data.sha256 /tmp/dump.pm2"
+
+# Step L5: make the second cold copy (different physical location / cloud)
+```
+
+Expected size after gzip: roughly 4–6 GB (chain blocks compress moderately).
+Full run time: ~10–20 min pack + transfer depending on uplink. `pm2 env <id>`
+output (RPC ports, API tokens) goes into the encrypted env note from step 3
+of the main checklist.
+
 ### Restart checklist (when / if ever reviving L1)
 
 1. Provision a server; `git clone` this repo; restore data dir from snapshot.
